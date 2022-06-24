@@ -1,6 +1,5 @@
 # onepiecescraper
 
 
-Scraper module for the onepiececonverter app (TBD)
+Web scraper module to store the episode titles and episode number to manga chapter mapping for one piece.
 
-<< If you are bored with the anime, enter the episode and get the corresponding manga chapter. Thats the vision. >>
