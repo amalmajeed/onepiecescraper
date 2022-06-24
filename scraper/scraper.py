@@ -1,5 +1,5 @@
 # This module scrapers the table mapping of One Piece anime episodes to titles and corresponding manga chapters
-# from the URL into a pandas dataframe 
+# from the URL into a pandas dataframe and updates the entry to the remote MongoDB cluster
 
 # Input : link to the URL
 # Process : scrape the HTML and move it to a pandas dataframe and extract only the necessary columns
@@ -12,8 +12,14 @@ from collections import defaultdict
 from pymongo import MongoClient
 from datetime import datetime
 
+password = None
+
+#Reading the username and password credential
+with open("./scraper/passwords.txt","rt") as fi:
+    username,password = fi.read().strip().split(":")
+
 map_URL = "https://listfist.com/list-of-one-piece-episode-to-chapter-conversion"
-db_URL = "mongodb+srv://amal:luffyisking@episodestochapters.l8qrtlg.mongodb.net/?retryWrites=true&w=majority"
+db_URL = "mongodb+srv://"+username+":"+password+"@episodestochapters.l8qrtlg.mongodb.net/?retryWrites=true&w=majority"
 
 onepieceTables = pd.read_html(map_URL)
 
@@ -57,6 +63,7 @@ uploadTime = str(curDT.year)+"-"+str(curDT.month)+"-"+str(curDT.day)+"  "+str(cu
 
 collexion1.insert_one({"_id":"onepiecemap","content": episodeMap,"time_uploaded":uploadTime})
 collexion2.insert_one({"_id":"onepiecetitles","content": titleMap,"time_uploaded":uploadTime})
+print("Done !")
 
 
 # print(f"The map is : {type(onepieceDF.loc[i,ma])}")
