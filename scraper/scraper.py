@@ -35,16 +35,18 @@ def defRet():
 episodeMap = defaultdict(defRet)
 titleMap = defaultdict(defRet)
 
-
+# Populating the default dictionaries to write to mongoDB
 for i in range(0,episodesN):
-    # print(onepieceDF.loc[i,title])
     episodeMap[str(onepieceDF.loc[i,ep])] = onepieceDF.loc[i,ma].replace(" ","").split("|")
     titleMap[str(onepieceDF.loc[i,ep])] = onepieceDF.loc[i,title]
 
+# Connecting to mongoDB
 cluster = MongoClient(db_URL)
 db = cluster['animetomanga']
 collexion1 = db['episodetochapter']
 collexion2 = db['episodetotitle']
+
+# Deletion of stale copy and updation
 
 try:
     collexion1.delete_one({})
@@ -63,7 +65,7 @@ uploadTime = str(curDT.year)+"-"+str(curDT.month)+"-"+str(curDT.day)+"  "+str(cu
 
 collexion1.insert_one({"_id":"onepiecemap","content": episodeMap,"time_uploaded":uploadTime})
 collexion2.insert_one({"_id":"onepiecetitles","content": titleMap,"time_uploaded":uploadTime})
-print("Done !")
+print("\nDone !\n")
 
 
-# print(f"The map is : {type(onepieceDF.loc[i,ma])}")
+
